@@ -36,10 +36,10 @@
 
         const commitsForChart = []
         for (let repoName of repoNames) {
-            const res = await octokit.request(`GET /repos/${repoName}`, {})
+            const res = await octokit.request(`GET /repos/${repoName}`, {}).catch(console.log)
             let commitsAmount = 0
             if (res.data.size > 0) {
-                const commits = await octokit.request(`GET /repos/${repoName}/commits`, {})
+                const commits = await octokit.request(`GET /repos/${repoName}/commits`, {}).catch(console.log)
                 commitsAmount = commits.data.length
                 commitsForChart.push(...commits.data.map(c => {
                     return {date: c.commit.author.date}
