@@ -1,0 +1,156 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+            integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module">
+        import {Octokit} from "https://cdn.skypack.dev/octokit";
+
+        const octokit = new Octokit({auth: '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'})
+        const repoNames = [
+            'ronkaraqa/semesterarbeit',
+            'Larsibaer/myWebsite',
+            'yaeltnz/EWEB-Projekt',
+            'naschiii/portfolio',
+            'TabeaTh/portfoliopage',
+            'NoemieSch/portfoliopage',
+            'tylyty/Portfolio',
+            'PatricBeck/Einzelarbeit',
+            'sarbj1/Projekt',
+            'eribeeri/Github-Portfoliopage',
+            'hessnicole/PortfolioNH',
+            'SimonRofalski/eweb',
+            'Sari95/Portfolio-Sarah-Schuerch',
+            'schor9/Portfolio-Romina',
+            'LANGB4/EWEB-Porfolio',
+            'noahkuonen/Portfolio_Noah',
+            'yvo2/yvo2.github.io',
+            'Gitimur/timzuercher',
+            'gilluuu/portfolio',
+            'joelrohrbach/PersonalPortfolio',
+            'knupb/portfolioseite',
+            'gorbunov8/react-portfolio-website',
+        ]
+
+        const commitsForChart = []
+        for (let repoName of repoNames) {
+            const res = await octokit.request(`GET /repos/${repoName}`, {})
+            let commitsAmount = 0
+            if (res.data.size > 0) {
+                const commits = await octokit.request(`GET /repos/${repoName}/commits`, {})
+                commitsAmount = commits.data.length
+                commitsForChart.push(...commits.data.map(c => {
+                    return {date: c.commit.author.date}
+                }))
+            }
+            let url = ''
+            if (res.data.has_pages) {
+                const frags = repoName.split('/')
+                url = `https://${frags[0]}.github.io/${frags[1]}`
+            }
+            let template = `<div class="card">`
+            template += `<div>${repoName}</div>`
+            template += `<div class="commits">${commitsAmount} Commits</div>`
+            if (url !== '') {
+                template += `<iframe src="${url}"  name="iframe" height="400" width="325"></iframe>`
+            } else {
+                template += `<p>Github Pages noch nicht eingerichtet oder unter anderer URL deployed</p>`
+            }
+            template = template + `</div>`
+            const cc = document.getElementById('cardcontainer')
+            cc.insertAdjacentHTML('beforeend', template)
+        }
+
+        function getCommitsOfLast7Days() {
+            let result = [0, 0, 0, 0, 0, 0, 0]
+            for (let commit of commitsForChart) {
+                let commitDate = new Date(commit.date)
+                let current = new Date()
+                if (commitDate.getDate() < current.getDate() - 7) {
+                    continue;
+                }
+                for (let i = 0; i < 7; i++) {
+                    if (commitDate.getDate() === current.getDate() - i) {
+                        result[(result.length - 1) - i]++
+                    }
+                }
+            }
+            return result
+        }
+
+        const dayMap = new Map([
+            [0, 'Sunday'],
+            [1, 'Monday'],
+            [2, 'Tuesday'],
+            [3, 'Wednesday'],
+            [4, 'Thursday'],
+            [5, 'Friday'],
+            [6, 'Saturday'],
+
+        ])
+
+        console.log(new Date().getDate())
+
+        function Last7Days() {
+            let result = [];
+            for (let i = 0; i < 7; i++) {
+                let d = new Date();
+                d.setDate(d.getDate() - i);
+                result.unshift(dayMap.get(d.getDay()))
+            }
+            return (result);
+        }
+
+        const data = {
+            labels: Last7Days(),
+            datasets: [{
+                label: 'Total commits per day in last 7 days',
+                backgroundColor: '#BFD3C1FF',
+                borderColor: '#BFD3C1FF',
+                data: getCommitsOfLast7Days(),
+            }]
+        };
+
+        document.getElementById('spinner').style.display = 'none'
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+        const myChart = new Chart(
+            document.getElementById('chart'),
+            config
+        );
+        document.getElementById('chart').style.display = 'block'
+
+    </script>
+</head>
+<body>
+<div class="chart-wrapper">
+    <div class="chartcontainer">
+        <div id="spinner" class="spinner wrapper">
+            <div id="firefox">
+                <img src="assets/firefox.svg">
+            </div>
+            <div id="edge">
+                <img src="assets/edge.svg">
+            </div>
+            <div id="chrome">
+                <img src="assets/chrome.svg">
+            </div>
+            <div id="safari">
+                <img src="assets/safari.svg">
+            </div>
+            <div id="opera">
+                <img src="assets/opera.svg">
+            </div>
+        </div>
+        <canvas id="chart"></canvas>
+    </div>
+</div>
+<div id="cardcontainer">
+</div>
+</body>
+
