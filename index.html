@@ -8,7 +8,8 @@
     <script type="module">
         import {Octokit} from "https://cdn.skypack.dev/octokit";
 
-        const octokit = new Octokit({auth: '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'})
+        // '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'
+        const octokit = new Octokit({auth: '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'})
         const repoNames = [
             'ronkaraqa/semesterarbeit',
             'Larsibaer/myWebsite',
@@ -36,10 +37,10 @@
 
         const commitsForChart = []
         for (let repoName of repoNames) {
-            const res = await octokit.request(`GET /repos/${repoName}`, {}).catch(console.log)
+            const res = await octokit.request(`GET /repos/${repoName}`, {})
             let commitsAmount = 0
             if (res.data.size > 0) {
-                const commits = await octokit.request(`GET /repos/${repoName}/commits`, {}).catch(console.log)
+                const commits = await octokit.request(`GET /repos/${repoName}/commits`, {})
                 commitsAmount = commits.data.length
                 commitsForChart.push(...commits.data.map(c => {
                     return {date: c.commit.author.date}
