@@ -12,7 +12,18 @@ p {
     color: #666;
     font-size: 12px;
     max-width: 25ch;
+}
 
+a {
+    color: rgb(48, 73, 50, 0.7);
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: 19px;
+}
+
+a:hover {
+    color: rgb(48, 73, 50, 0.8);
+    text-decoration: underline;
 }
 
 .card {

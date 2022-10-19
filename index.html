@@ -66,7 +66,7 @@ import {Octokit} from "https://cdn.skypack.dev/octokit";
                 url = `https://${frags[0]}.github.io/${frags[1]}`
             }
             let template = `<div class="card">`
-            template += `<div>${repoName}</div>`
+            template += `<a href="https://github.com/${repoName}" target="_blank">${repoName}</a>`
             template += `<div class="commits">${commitsAmount} Commits</div>`
             if (url !== '') {
                 template += `<iframe src="${url}"  name="iframe" height="400" width="325"></iframe>`
