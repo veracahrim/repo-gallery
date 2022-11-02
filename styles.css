@@ -26,6 +26,10 @@ a:hover {
     text-decoration: underline;
 }
 
+.website_link {
+    font-size: 12px;
+}
+
 .card {
     padding: 1em;
     border-radius: 10px;

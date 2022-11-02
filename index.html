@@ -31,7 +31,7 @@ import {Octokit} from "https://cdn.skypack.dev/octokit";
             'naschiii/portfolio',
             'NoemieSch/portfoliopage',
             'SimonRofalski/eweb',
-            // something wrong with repo: 'Sari95/Portfolio-Sarah-Schuerch',
+            'Sari95/Portfolio-Sarah-Schuerch',
             'schor9/Portfolio-Romina',
             'SandroHertig/EWEBSandro',
             'SalvatoreCrisafulli/Portfolio_SalvatoreCrisafulli',
@@ -70,6 +70,9 @@ import {Octokit} from "https://cdn.skypack.dev/octokit";
             }
             let template = `<div class="card">`
             template += `<a href="https://github.com/${repoName}" target="_blank">${repoName}</a>`
+            if (url !== '') {
+                template += `<a class="website_link" href="${url}">Link zur Webseite</a>`
+            }
             template += `<div class="commits">${commitsAmount} Commits</div>`
             if (url !== '') {
                 template += `<iframe src="${url}"  name="iframe" height="400" width="325"></iframe>`
